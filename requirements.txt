@@ -1,0 +1,9 @@
+bonobo==0.6.4
+luigi==3.5.0
+mETL==1.0.6
+pandas==2.2.2
+prefect==2.19.0
+psycopg2_binary==2.9.9
+PyYAML==6.0.1
+PyYAML==6.0.1
+SQLAlchemy==1.4.52

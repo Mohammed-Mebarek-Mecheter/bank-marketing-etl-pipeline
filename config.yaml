@@ -1,0 +1,60 @@
+# Configuration for a Basic Data Pipeline
+pipeline:
+  name: Bank Marketing Pipeline
+  version: 1.0
+
+# DISCLAIMER: modify the following code to match your local Postgre instance
+postgresql:
+  host: localhost
+  port: 5432
+  username: your_username
+  password: your_password
+  database_name: bank_marketing_db
+
+# Bank Marketing data file paths (if applicable)
+client_filepath: data/client.csv
+campaign_filepath: data/campaign.csv
+economics_filepath: data/economics.csv
+
+# Bank Marketing Data output tables in PSQL
+client_table_PSQL: bank_marketing_schema.client
+campaign_table_PSQL: bank_marketing_schema.campaign
+economics_table_PSQL: bank_marketing_schema.economics
+
+# Bank Marketing Data output schemas in PSQL
+client_create_PSQL: |
+  CREATE TABLE IF NOT EXISTS bank_marketing_schema.client (
+    client_id SERIAL PRIMARY KEY,
+    age INTEGER,
+    job VARCHAR(100),
+    marital VARCHAR(50),
+    education VARCHAR(100),
+    credit_default BOOLEAN,
+    mortgage BOOLEAN
+  )
+
+client_insert_PSQL: 'INSERT INTO bank_marketing_schema.client VALUES (%s, %s, %s, %s, %s, %s, %s)'
+
+campaign_create_PSQL: |
+  CREATE TABLE IF NOT EXISTS bank_marketing_schema.campaign (
+    client_id INTEGER,
+    number_contacts INTEGER,
+    contact_duration INTEGER,
+    previous_campaign_contacts INTEGER,
+    previous_outcome BOOLEAN,
+    campaign_outcome BOOLEAN,
+    last_contact_date DATE,
+    FOREIGN KEY (client_id) REFERENCES bank_marketing_schema.client(client_id)
+  )
+
+campaign_insert_PSQL: 'INSERT INTO bank_marketing_schema.campaign VALUES (%s, %s, %s, %s, %s, %s, %s)'
+
+economics_create_PSQL: |
+  CREATE TABLE IF NOT EXISTS bank_marketing_schema.economics (
+    client_id INTEGER,
+    cons_price_idx FLOAT,
+    euribor_three_months FLOAT,
+    FOREIGN KEY (client_id) REFERENCES bank_marketing_schema.client(client_id)
+  )
+
+economics_insert_PSQL: 'INSERT INTO bank_marketing_schema.economics VALUES (%s, %s, %s)'
